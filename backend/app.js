@@ -2,14 +2,25 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const path = require('path')
+const dotenv = require('dotenv').config()
 
 const sauceRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 
-mongoose.connect('mongodb+srv://P6_r_v:hJiXfhDCc64XXnE2@cluster0.0pvae.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
+
+mongoose.connect(process.env.MONGODB_URI,
+  { 
+    dbName: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    pass: process.env.DB_PASS,
+
+
+    useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
