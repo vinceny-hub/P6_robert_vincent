@@ -49,7 +49,14 @@ export class SignupComponent implements OnInit {
         this.loading = false;
         console.error(error);
         this.errorMsg = error.message;
-    });
+        if(error.status = 430 ){ 
+        console.log(error.status)
+        
+        alert('Le mot de passe doit contenir : ')
+    }else{
+      alert('error')
+        }
+      }
+    )
   }
-
 }

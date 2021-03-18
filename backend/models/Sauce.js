@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
+// schéma de données du formulaire sauce
 const sauceSchema = mongoose.Schema({
-
   
   name: { type: String, required: true, unique: true},
   manufacturer: { type: String, required: true },

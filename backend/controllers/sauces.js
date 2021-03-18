@@ -1,12 +1,15 @@
 const Sauce = require('../models/Sauce')
-const fs = require('fs')
+const fs = require('fs')//module 'file system' de Node permettant le téléchargement et la modofocation des images
 
+//création d'une sauce
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce)
     delete sauceObject._id
     const sauce = new Sauce({
         ...sauceObject,
+        //répertoire images
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+         //initialisation des likes
         likes: 0,
         dislikes: 0,
         usersLiked: [],
@@ -18,7 +21,7 @@ exports.createSauce = (req, res, next) => {
     .then(() => res.status(201).json({message: 'sauce enregistrée !'}))
     .catch(error => res.status(400).json({error}))
 }
-
+//modification des sauces
 exports.modifySauce = (req, res, next) => {
     const sauceObject = req.file ?
     {
@@ -29,7 +32,7 @@ exports.modifySauce = (req, res, next) => {
     .then(sauce => res.status(200).json({message:'sauce modifié !'}))
     .catch(error => res.status(400).json({ error }))
 }
-
+//suppression d'une sauce
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
       .then(sauce => {
@@ -42,30 +45,26 @@ exports.deleteSauce = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }))
   }
-
+//trouver une sauce
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(404).json({error}))
 }
-
+//toutes les sauces
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
     .then(sauces => res.status(200).json(sauces))
     .catch(error => res.status(404).json({error}))
 }
 
-// **************************************************************
-
+// *********Likes ********
 
 exports.likeSauce = (req, res, next) => {
   
   let like = req.body.like
   let userId = req.body.userId
   let objectId = req.params.id
-
-  // Sauces.findOne({ _id: req.params.id })
-  //         .then((sauce) => {}
 
   if (like === 1) { 
     Sauce.updateOne({

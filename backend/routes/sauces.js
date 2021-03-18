@@ -1,15 +1,15 @@
+//routes sauces 
+
+//router express
 const express = require('express')
 const router = express.Router()
 
+//import depuis controllers/sauces
 const sauceCtrl = require('../controllers/sauces')
 
-const auth = require('../middleware/auth')
-const multer = require('../middleware/multer-config')
-
-
-
-
-
+//import depuis les middlewares auth et multer-config
+const auth = require('../middleware/auth')//authentification JsonWebToken
+const multer = require('../middleware/multer-config')//gestion des images
 
 router.get('/', auth, sauceCtrl.getAllSauces)
 

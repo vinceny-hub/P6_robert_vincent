@@ -1,15 +1,16 @@
 const multer = require('multer')
-
+//type d'images
 const MIME_TYPES = {
     'image/jpg': 'jpg',
     'image/jpeg': 'jpg',
     'image/png': 'png'
 }
-
+//destination de l'import des images
 const storage = multer.diskStorage({
     destination: (req, file, callback) => { 
     callback(null, 'images')
 },
+//nom du fichier image, nouveau nom crée en fonction de la date de création
 filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_')
     const extension = MIME_TYPES[file.mimetype]

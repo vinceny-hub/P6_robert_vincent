@@ -1,6 +1,6 @@
-const http = require('http');
+const http = require('http'); //l'obtention d'un ssl https serait plus sûre
 const app = require('./app');
-
+// configuration du port de connection en fonction de l'environnement (port valide)
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -12,6 +12,8 @@ const normalizePort = val => {
   }
   return false;
 };
+
+// port de connection, 3000 par défaut
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 console.log(process.env.PORT)
@@ -36,6 +38,8 @@ const errorHandler = error => {
   }
 };
 
+
+// Lancement du serveur 
 const server = http.createServer(app);
 
 server.on('error', errorHandler);
