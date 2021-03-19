@@ -1,8 +1,9 @@
-const http = require('http'); //l'obtention d'un ssl https serait plus sûre
-const app = require('./app');
+const http = require('http')//l'obtention d'un ssl https serait plus sûre
+const app = require('./app')
+
 // configuration du port de connection en fonction de l'environnement (port valide)
 const normalizePort = val => {
-  const port = parseInt(val, 10);
+const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     return val;
@@ -11,8 +12,7 @@ const normalizePort = val => {
     return port;
   }
   return false;
-};
-
+}
 // port de connection, 3000 par défaut
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -36,17 +36,14 @@ const errorHandler = error => {
     default:
       throw error;
   }
-};
-
-
+}
 // Lancement du serveur 
-const server = http.createServer(app);
+const server = http.createServer(app)
 
-server.on('error', errorHandler);
+server.on('error', errorHandler)
 server.on('listening', () => {
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-  console.log('Listening on ' + bind);
-});
-
+  console.log('Listening on ' + bind)
+})
 server.listen(port);

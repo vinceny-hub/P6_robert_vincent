@@ -3,6 +3,11 @@ const bodyParser = require('body-parser')// extraction des objets JSON
 const mongoose = require('mongoose')// plugin mongoose
 const path = require('path')// chemin de fichier
 const dotenv = require('dotenv').config()// module servant à masquer les informations de connexion à la base de données
+const helmet = require('helmet')
+
+// var session = require('express-session');
+var session = require('cookie-session');
+
 
 // routes
 const sauceRoutes = require('./routes/sauces')
@@ -32,8 +37,34 @@ app.use((req, res, next) => {
     next()
     })
 
+
+// app.set('trust proxy', 1) // trust first proxy
+// app.use( session({
+//    secret : 's3Cur3',
+//    name : 'sessionId',
+//   })
+// );
+
+// expiration des cookies
+var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
+app.use(session({
+  name: 'session',
+  secret: process.env.DB_PASS,
+  // keys: ['key1', 'key2'],
+  cookie: { secure: true,
+            httpOnly: true,
+            domain: 'http://localhost:3000',
+            // path: 'foo/bar',
+            expires: expiryDate
+          }
+  })
+);
+
 // les requêtes POST sont transformées en objet JSON
 app.use(bodyParser.json())
+
+// protection X-XSS -activate a script filter for (XSS) on websites-
+app.use(helmet())
 
 // charger les images depuis le dossier 'images'
 app.use('/images', express.static(path.join(__dirname,'images')))
