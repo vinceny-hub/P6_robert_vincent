@@ -19,26 +19,18 @@ exports.signup = (req, res, next) => {
             email: req.body.email,
             password: hash
         })
-   
         const maskedSignup = MaskData.maskJSONFields(user, maskJSONOptions) 
         console.log(maskedSignup)
         user.save()
             .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
             .catch(error => res.status(400).json({ error }))
     })
-    
     .catch(error => res.status(500).json({ error }))
-
-
-}else
-
+}else{
 res.status(430).json({ error })
- 
-}
-
+}}
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
-
     .then(user => {
         //masquage des donnés de mot-de-passe
         const maskJSONOptions = { maskWith: "*", fields: ['email','password']};
@@ -47,12 +39,10 @@ exports.login = (req, res, next) => {
         }
         bcrypt.compare(req.body.password, user.password)
             .then(valid => {
-                          
                 if (!valid) {
                     return res.status(401).json({ error: 'Mot de passe incorrect !' })
                 }
                 res.status(200).json({
-                   
                     userId: user._id,
                     token: jwt.sign(
                         { userId: user._id },

@@ -4,19 +4,15 @@ const mongoose = require('mongoose')// plugin mongoose
 const path = require('path')// chemin de fichier
 const dotenv = require('dotenv').config()// module servant à masquer les informations de connexion à la base de données
 const helmet = require('helmet')
-
 // var session = require('express-session');
-var session = require('cookie-session');
-
-
+var session = require('cookie-session')
 // routes
 const sauceRoutes = require('./routes/sauces')
 const userRoutes = require('./routes/user')
 
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-
+mongoose.set('useNewUrlParser', true)
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 // connection à MongoDB 
 mongoose.connect(process.env.MONGODB_URI,
   { 
@@ -26,7 +22,7 @@ mongoose.connect(process.env.MONGODB_URI,
     useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+  .catch(() => console.log('Connexion à MongoDB échouée !'))
 
 const app = express()
 
@@ -36,17 +32,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
     next()
     })
-
-
-// app.set('trust proxy', 1) // trust first proxy
-// app.use( session({
-//    secret : 's3Cur3',
-//    name : 'sessionId',
-//   })
-// );
-
 // expiration des cookies
-var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
+var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ) // 1 hour
 app.use(session({
   name: 'session',
   secret: process.env.DB_PASS,
@@ -58,20 +45,15 @@ app.use(session({
             expires: expiryDate
           }
   })
-);
-
+)
 // les requêtes POST sont transformées en objet JSON
 app.use(bodyParser.json())
-
 // protection X-XSS -activate a script filter for (XSS) on websites-
 app.use(helmet())
-
 // charger les images depuis le dossier 'images'
 app.use('/images', express.static(path.join(__dirname,'images')))
-
 //routes Url
 app.use('/api/sauces', sauceRoutes)
 app.use('/api/auth', userRoutes)
-
 //export vers server.js
 module.exports = app
